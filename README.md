@@ -1,6 +1,6 @@
 # WebSocket connector usage
 
-The application **banking-portal-xapi** shows the usage of WebSocket connector. More you can find at my [article](http://ambassadorpatryk.com/blog) about it.
+The application **banking-portal-xapi** shows the usage of WebSocket connector. More you can find at my [article](http://ambassadorpatryk.com/2020/03/publish-web-socket-in-the-experience-layer) about it.
 
 
 ## Configuration
