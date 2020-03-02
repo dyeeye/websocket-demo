@@ -1,0 +1,24 @@
+<html>
+<head>
+<script type="text/javascript">
+var ws = new WebSocket("ws://localhost:8081/ws/exchange-rates");
+ws.onopen = function (event) {
+	var request = {
+		base: "PLN"
+	};
+	ws.send(JSON.stringify(request)); 
+	
+	request = {
+		base: "USD"
+	};
+	ws.send(JSON.stringify(request)); 
+};
+ws.onmessage = function (event) {
+	console.log(event.data);
+}
+</script>
+</head>
+<body>
+<h1>Exchange rates</h1>
+</body>
+</html>

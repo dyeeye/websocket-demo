@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+ <http:listener-config name="banking-forex-sapi-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+ <apikit:config name="banking-forex-sapi-config" api="resource::a0258684-3bbc-4bc7-b342-a912076233b8:banking-forex-sapi:1.0.1:raml:zip:banking-forex-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<http:request-config name="Forex_HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f75efb98-9295-4f6d-a591-c605455f9835" basePath="/api" >
+		<http:request-connection protocol="HTTPS" host="www.freeforexapi.com" port="443" />
+	</http:request-config>
+	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="69850afb-7618-485a-9d77-0f2a662f4686" >
+		<sqs:basic-connection accessKey="${sqs.accessKey}" secretKey="${sqs.secretKey}"/>
+	</sqs:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="34545180-0425-4436-b226-33fa772177ba" file="application.yaml" />
+    	
+
+</mule>

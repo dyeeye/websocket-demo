@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:websocket="http://www.mulesoft.org/schema/mule/websocket"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/websocket http://www.mulesoft.org/schema/mule/websocket/current/mule-websocket.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+	<flow name="exchange-rates-flow" doc:id="f367f49f-b2b3-4d66-9af4-889b89c1e302" >
+		<websocket:inbound-listener doc:name="On New Inbound Message" doc:id="760f6d23-e8a2-4881-a92c-5601e0bfd429" config-ref="WebSockets_Config" path="/exchange-rates" outputMimeType="application/json"/>
+		<logger level="INFO" doc:name="Logger" doc:id="17fe09d7-4cc0-41ee-a09c-1a467a3cd286" message="Received message #[payload]"/>
+		<websocket:subscribe-groups doc:name="Rates groups" doc:id="fb253b32-ef30-48c3-b596-81470b11e1c7" config-ref="WebSockets_Config" socketId="#[attributes.socketId]">
+			<websocket:groups >
+				<websocket:group value='#[payload.base ++ "_rates"]' />
+			</websocket:groups>
+		</websocket:subscribe-groups>
+		<websocket:send doc:name="Successful subscription" doc:id="3734ce97-aa6c-4055-b5aa-43a6026260a4" config-ref="WebSockets_Config" socketId="#[attributes.socketId]">
+			<websocket:content ><![CDATA[#[output application/json
+---
+{
+	"status": "subscribed"
+}]]]></websocket:content>
+		</websocket:send>
+	</flow>
+	<flow name="banking-portal-xapiFlow" doc:id="aaf0b19c-14d6-4560-a61b-4b178c6e6f38" >
+		<websocket:on-inbound-connection doc:name="On New Inbound Connection" doc:id="c41bcad7-077d-48e9-8be4-272881391da9" config-ref="WebSockets_Config" path="/exchange-rates"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5336c470-86f7-43c6-af71-7600d3b694d6" message="Opened connection for #[attributes.socketId]"/>
+	</flow>
+	<flow name="read-exchange-rates-flow" doc:id="7dc800a2-39f6-4807-a009-e369eda7e4a8" >
+		<sqs:receivemessages doc:name="Exchange Rates" doc:id="0380180e-388e-475f-baea-cafe4cdeefe9" config-ref="Amazon_SQS_Configuration" queueUrl="exchange-rate-proc"/>
+		<ee:transform doc:name="Rates" doc:id="8bb362f6-4d8e-4412-81e9-d689ee0e582f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+read(payload.body, 'application/json')]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="base" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.messageAttributes.Currency]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<websocket:broadcast doc:name="Broadcast" doc:id="727a6e10-f17c-4d92-858b-8f13ba10d7b5" config-ref="WebSockets_Config" path="/ws/exchange-rates" socketType="INBOUND">
+			<websocket:groups >
+				<websocket:group value='#[vars.base ++ "_rates"]' />
+			</websocket:groups>
+		</websocket:broadcast>
+	</flow>
+</mule>

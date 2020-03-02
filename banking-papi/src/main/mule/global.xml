@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="0af385e4-336b-4981-b7a6-d4b64182a206" >
+		<sqs:basic-connection accessKey="${sqs.accessKey}" secretKey="${sqs.secretKey}"/>
+	</sqs:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="8ecb467a-3005-45ee-8e6c-3674a05f4004" file="application.yaml" />
+</mule>

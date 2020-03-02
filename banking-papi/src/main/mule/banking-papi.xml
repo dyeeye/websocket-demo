@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+	<flow name="read-exchange-rates" doc:id="3fd9f4d0-ba3b-44db-86f7-42cf35dafc51" >
+		<sqs:receivemessages doc:name="Receive messages" doc:id="1b8955ac-c631-48dc-8f89-2164840f0f6a" config-ref="Amazon_SQS_Configuration"/>
+		<sqs:send-message doc:name="Rates" doc:id="1d57de18-c0dc-4fb1-afee-969913a06661" config-ref="Amazon_SQS_Configuration" queueUrl="exchange-rate-proc"/>
+	</flow>
+</mule>

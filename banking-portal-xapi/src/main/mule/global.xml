@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:websocket="http://www.mulesoft.org/schema/mule/websocket"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/websocket http://www.mulesoft.org/schema/mule/websocket/current/mule-websocket.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="56253fc2-1d95-40d4-9c59-6f0363324250" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<websocket:config name="WebSockets_Config" doc:name="WebSockets Config" doc:id="94e6cee1-a149-4db1-8889-a4ca9f0c2cd1" >
+		<websocket:connection >
+			<websocket:server-settings listenerBasePath="/ws" listenerConfig="HTTP_Listener_config" idleSocketTimeout="60" />
+		</websocket:connection>
+	</websocket:config>
+	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="8b07cea7-1725-4c16-a2dc-438e85d21c2b" >
+		<sqs:basic-connection accessKey="${sqs.accessKey}" secretKey="${sqs.secretKey}"/>
+	</sqs:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="ecfd316e-940c-4d6d-bb54-2008a71aceae" file="application.yaml" />
+</mule>

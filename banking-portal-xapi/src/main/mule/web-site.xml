@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="fe08dc29-d0db-4a87-9cee-f5d200ee434a" >
+		<http:listener-connection host="0.0.0.0" port="8090" />
+	</http:listener-config>
+	<flow name="web-siteFlow" doc:id="67ad8383-2203-45f5-8e81-77ad3405f8fe" >
+		<http:listener doc:name="Listener" doc:id="3a865aa9-05ab-4bb8-b9cf-c347a9a3c50a" config-ref="HTTP_Listener_config" path="/rates"/>
+		<parse-template doc:name="Parse Template" doc:id="dba8f5e2-e854-47d0-9834-31df311de7e7" location="index.html"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="68fdb708-4ab7-490d-8235-7a59c4d7becd" mimeType="text/html"/>
+	</flow>
+</mule>
